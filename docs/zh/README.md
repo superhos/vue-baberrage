@@ -2,13 +2,15 @@
 
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
-Barrage plugin for Vue.js
+Vue.js 弹幕插件
 
 ![old_version](https://raw.githubusercontent.com/superhos/vue-baberrage/master/screenshot/old_demo.gif)
 
-[中文文档](/docs/zh/README.md)
+## 设计概念
 
-## Installation
+有人问到为什么没有提供全局调用的插入弹幕方法，初衷是因为希望弹幕数据部分还是交由Vuex中心状态去管理。
+
+## 安装
 
 1) Install package via NPM
 
@@ -34,7 +36,7 @@ or
 <script src="./dist/vue-baberrage.js"></script>
 ```
 
-## Usage
+## 使用
 
 1) Template
 `isShow` and `barrageList` are necessary.
@@ -80,77 +82,77 @@ export default {
 
 3) Already done
 
-Just two step, and add new barrage message by pushing data into the `barrageList`. You needn't concern about the management of the barrageList, it will be handled by vue-baberrage. Suggest the `barrageList` store into the Vuex.
+两步即可， 当有新的数据加入到`barrageList`，就会以弹幕形式展现出来，建议`barrageList`放在Vuex中。
 
-## Plugin Options
+## 插件选项
 
 #### isShow
 	- Default: `true`
 	- Acceptable-Values: Boolean
-	- Function: This is the switch that if barrage is displayed.
+	- Function: 是否显示弹幕
 
 #### barrageList
 	- Default: `[]`
 	- Acceptable-Values: Array
-	- Function: The is the container for managing the all barrage messages.
+	- Function: 弹幕数据列表
 
 #### boxWidth
 	- Default: `parent's Width`
 	- Acceptable-Values: Number
-	- Function: Determine the width of the stage.
+	- Function: 显示弹幕区域的宽度
 
 #### boxHeight
 	- Default: `window's Height`
 	- Acceptable-Values: Number
-	- Function: Determine the height of the stage.
+	- Function: 显示弹幕区域的高度
 
 #### loop
 	- Default: `false`
 	- Acceptable-Values: Boolean
-	- Function: Loop or not.
+	- Function: 是否循环
 
-## Barrage Message Options
+## 弹幕数据选项
 
 #### id
 	- Default: `null`
 	- Acceptable-Values: Number
-	- Function: For distinguish with other barrage messages.
+	- Function: 用以区分每条弹幕
 
 #### avatar
 	- Default: `#`
 	- Acceptable-Values: String
-	- Function: Show the avatar of the barrage message.
+	- Function: 弹幕的头像
 	
 #### msg
 	- Default: `null`
 	- Acceptable-Values: String
-	- Function: The content of the barrage message.
+	- Function: 弹幕内容
 
 #### barrageStyle
 	- Default: `normal`
 	- Acceptable-Values: String
-	- Function: the css class name of the barrage message.
+	- Function: 额外的弹幕的样式
 
 #### time
 	- Default: `10`
 	- Acceptable-Values: Number
-	- Function: How long does the barrage message show.(Seconds)
+	- Function: 弹幕展示的时间（单位：秒）
 
 #### type
 	- Default: `0`
 	- Acceptable-Values: Number
-	- Function: The type of the barrage message. 
-				0 for scroll from right to left. 
-				1 for fixed on the top or bottom of the stage.
+	- Function: 弹幕的类型
+				0 ： 正常从右到左滚动
+				1 ： 固定在弹幕区域上方
 
 #### position
 	- Default: `top`
 	- Acceptable-Values: Boolean
-	- Function: Determine the position of the barrage message when the type is 0.
+	- Function: 目前为固定值，之后功能更新。
 
 ## Events
 
-`barrage-list-empty` when the `barrageList` is empty will be called.
+当 `barrageList` 为空的时候会调用 `barrage-list-empty`。
 
 ```html
 <vue-baberrage
@@ -164,11 +166,11 @@ Just two step, and add new barrage message by pushing data into the `barrageList
 ## Log
 
 #### Version 0.0.1
-- Realized the basic functionality.
+- 实现基本功能.
 
 #### Version 1.0.0
-- Performance improvement.
+- 性能优化。
 
 #### Version 1.2.0
-- Code specification
-- Performance improvement.
+- 代码规范。
+- 性能优化。
