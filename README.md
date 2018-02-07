@@ -4,7 +4,7 @@
 
 Barrage plugin for Vue.js
 
-![old_version](https://raw.githubusercontent.com/superhos/vue-baberrage/master/screenshot/old_demo.gif)
+![old_version](https://raw.githubusercontent.com/superhos/vue-baberrage/master/screenshot/demo.gif)
 
 [中文文档](/docs/zh/README.md)
 

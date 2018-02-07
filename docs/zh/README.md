@@ -4,7 +4,7 @@
 
 Vue.js 弹幕插件
 
-![old_version](https://raw.githubusercontent.com/superhos/vue-baberrage/master/screenshot/old_demo.gif)
+![old_version](https://raw.githubusercontent.com/superhos/vue-baberrage/master/screenshot/demo.gif)
 
 ## 设计概念
 
