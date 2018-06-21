@@ -51,7 +51,7 @@ export default {
           id: ++this.currentId,
           avatar: './static/avatar.jpg',
           msg: this.msg,
-          time: 8,
+          time: 15,
           type: 0
         })
       }
@@ -96,14 +96,16 @@ a {
 }
 
 .demo-control{
-  position:absolute;
-  left:40%;
-  width:20%;
-  bottom:300px;
-  background:rgba(0,0,0,.6);
-  padding:15px;
-  border-radius:5px;
-  border:2px solid #8ad9ff;
+    position: absolute;
+    left: 40%;
+    width: 400px;
+    bottom: 300px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 15px;
+    border-radius: 5px;
+    border: 2px solid #8ad9ff;
+    top: 70%;
+    height: 35px;
 
   input,button,select{
     height:35px;
@@ -114,13 +116,22 @@ a {
     color:#FFF;
     border-radius:0;
     width:15%;
+    box-sizing: border-box;
+  }
+
+  select{
+    height:33px;
+    margin-top:1px;
+    border: 0px;
+    outline: 1px solid rgb(204,204,204);
   }
 
   input{
-    width:50%;
-    height:33px;
+    width:55%;
+    height:35px;
     background:rgba(0,0,0,.7);
     border:1px solid #8ad9ff;
+    padding-left:5px;
     color:#FFF;
   }
 
