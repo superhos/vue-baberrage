@@ -19,7 +19,7 @@ module.exports = {
   // },
   entry: './src/lib/index.js',
   output: {
-    path: path.resolve(__dirname, './dist/js'),
+    path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
     filename: 'vue-baberrage.js',
     library: 'vue-baberrage',

@@ -1,16 +1,17 @@
 {
   "name": "vue-baberrage",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Berrage plugin for VUE.js",
   "author": "Sevenschan",
-  "private": true,
+  "private": false,
+  "main": "dist/vue-baberrage.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit",
-    "build": "node build/build.js"
+    "build": "webpack --progress --hide-modules"
   },
   "repository": {
     "type": "git",
