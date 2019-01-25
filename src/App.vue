@@ -19,11 +19,13 @@
 </template>
 
 <script>
+import { MESSAGE_TYPE } from './lib/index.js'
+
 export default {
   name: 'app',
   data () {
     return {
-      msg: 'Hello World!vue-baberrage 2.0!',
+      msg: 'Hello World!vue-baberrage 2.1.0!',
       position: 'top',
       barrageIsShow: true,
       currentId: 0,
@@ -43,7 +45,7 @@ export default {
           msg: this.msg,
           barrageStyle: 'top',
           time: 8,
-          type: 1,
+          type: MESSAGE_TYPE.FROM_TOP,
           position: 'top'
         })
       } else {
@@ -52,7 +54,7 @@ export default {
           avatar: './static/avatar.jpg',
           msg: this.msg,
           time: 15,
-          type: 0
+          type: MESSAGE_TYPE.NORMAL
         })
       }
     }

@@ -1,22 +1,15 @@
-var path = require('path')
-var webpack = require('webpack')
+const path = require('path')
+const webpack = require('webpack')
 
 module.exports = {
+  // Development Config
   // entry: './src/main.js',
-  // entry: './src/lib/index.js',
-  // output: {
-  //   path: path.resolve(__dirname, './dist'),
-  //   publicPath: '/dist/',
-  //   filename: 'vue-baberrage.js',
-  //   library: 'vue-baberrage',
-  //   libraryTarget: 'umd',
-  //   umdNamedDefine: true
-  // },
   // output: {
   //   path: path.resolve(__dirname, './dist'),
   //   publicPath: '/dist/',
   //   filename: 'build.js'
   // },
+  // Libirary Config
   entry: './src/lib/index.js',
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -59,7 +52,8 @@ module.exports = {
   resolve: {
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
-    }
+    },
+    extensions: ['*', '.js', '.vue', '.json']
   },
   devServer: {
     historyApiFallback: true,

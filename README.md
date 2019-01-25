@@ -1,4 +1,4 @@
-# vue-baberrage 1.2.0
+# vue-baberrage 2.1.1
 
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 

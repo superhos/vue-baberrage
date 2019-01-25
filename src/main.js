@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import vueBaberrage from './lib/index.js'
+import { vueBaberrage } from './lib/index.js'
 
 Vue.use(vueBaberrage)
 

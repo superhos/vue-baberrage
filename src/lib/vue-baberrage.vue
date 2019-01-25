@@ -1,26 +1,27 @@
 <template>
   <div class="baberrage-stage" v-show="isShow" ref="stage">
     <div class="baberrage-top">
-      <div v-for="item in topQueue" v-bind:style="item.style" v-bind:key="item.id" class="baberrage-item" v-bind:class="item.barrageStyle">
-        <div class="baberrage-avatar"><img :src="item.avatar"></div>
-        <div class="baberrage-msg">{{ item.msg }}</div>
-      </div>
+      <VueBaberrageMsg  v-for="item in topQueue" v-bind:key="item.id" class="baberrage-item" :item="item" />
     </div>
-    <div v-for="item in barrageList" v-bind:style="item.style" v-bind:key="item.id"  class="baberrage-item" v-bind:class="item.barrageStyle">
-      <div class="baberrage-avatar"><img :src="item.avatar"></div>
-      <div class="baberrage-msg">{{ item.msg }}</div>
-    </div>
+    <!-- Normal -->
+    <VueBaberrageMsg  v-for="item in normalQueue" v-bind:key="item.id" class="baberrage-item" :item="item" />
     <div class="baberrage-bottom">
-      <div v-for="item in bottomQueue" v-bind:key="item.id" v-bind:style="item.style" class="baberrage-item" v-bind:class="item.barrageStyle">
-        <div class="baberrage-avatar"><img :src="item.avatar"></div>
-        <div class="baberrage-msg">{{ item.msg }}</div>
-      </div>
+      <VueBaberrageMsg  v-for="item in bottomQueue" v-bind:key="item.id" class="baberrage-item" :item="item" />
     </div>
   </div>
 </template>
 <script>
+import VueBaberrageMsg from './components/vue-baberrage-msg'
+import { MESSAGE_TYPE } from './constants/index.js'
+
+window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
+window.cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame || function (requestID) { clearTimeout(requestID) }
+
 export default {
   name: 'vue-baberrage',
+  components: {
+    VueBaberrageMsg
+  },
   props: {
     isShow: {
       type: Boolean,
@@ -40,6 +41,15 @@ export default {
       type: Number,
       default: 0
     },
+    // 每条弹幕的基本高度
+    messageHeight: {
+      type: Number,
+      default: 40
+    },
+    messageGap: {
+      type: Number,
+      default: 5
+    },
     loop: {
       type: Boolean,
       default: false
@@ -50,18 +60,17 @@ export default {
       boxWidthVal: this.boxWidth,
       boxHeightVal: this.boxHeight,
       loopVal: this.loop,
+      laneNum: 0, // 将舞台分为固定泳道，防止弹幕重叠
       startTime: 0,
       frameId: null,
+      readyId: 0,
       topQueue: [], // 顶部队列
-      bottomQueue: [] // 底部队列
+      bottomQueue: [], // 底部队列
+      normalQueue: [] // 正常队列，新弹幕先进入队列，一定时限内再显示在ShowList
     }
   },
   mounted () {
-    window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
-
-    window.cancelAnimationFrame = window.cancelAnimationFrame ||
-      window.mozCancelAnimationFrame || function (requestID) { clearTimeout(requestID) }
-
+    // Calculate the size of Stage
     if (this.boxWidthVal === 0) {
       this.boxWidthVal = this.$refs.stage.parentNode.offsetWidth + 50
     }
@@ -71,25 +80,39 @@ export default {
       this.boxHeightVal = this.boxHeightVal === 0 ? window.innerHeight : this.boxHeightVal
     }
 
+    this.laneNum = this.boxHeightVal / (this.messageHeight + this.messageGap * 2)
+
     this.play()
   },
   watch: {
     barrageList (newBarrageList) {
-      this.updateBarrageDate()
+      this.insertToReadyShowQueue()
     }
   },
   methods: {
+    // 节流函数
+    insertToReadyShowQueue () {
+      clearTimeout(this.readyId)
+      this.readyId = setTimeout(() => {
+        while (this.barrageList.length > 0) {
+          this.normalQueue.push(this.barrageList.shift())
+        }
+        this.updateBarrageDate()
+      }, 300)
+    },
     // 更新弹幕数据
     updateBarrageDate (timestamp) {
       if (this.startTime == null) this.startTime = timestamp
       if (typeof timestamp !== 'undefined') {
         this.move(timestamp)
       }
-      if (this.barrageList.length > 0 || this.topQueue.length > 0 || this.bottomQueue.length > 0) {
+      if (this.normalQueue.length > 0 || this.topQueue.length > 0 || this.bottomQueue.length > 0) {
+        // console.log('go play')
         this.play()
       } else {
         // 如果弹幕序列为空发出事件 barrageListEmpty
         this.$emit('barrage-list-empty')
+        this.frameId = null
       }
     },
     // 开始弹幕
@@ -102,17 +125,14 @@ export default {
     },
     // 重设弹幕
     replay () {
-      for (var item of this.barrageList) {
-        item.startTime = null
-      }
+      this.normalQueue.forEach(item => { item.startTime = null })
       this.play()
     },
     // 弹幕移动
     move (timestamp) {
-      for (var i in this.barrageList) {
-        var item = this.barrageList[i]
-        if (typeof item.startTime !== 'undefined') {
-          if (item.type === 0) {
+      this.normalQueue.forEach((item, i) => {
+        if (item.startTime) {
+          if (item.type === MESSAGE_TYPE.NORMAL) {
             // 正常弹幕
             this.normalMove(item, timestamp)
             // 退出条件
@@ -122,7 +142,7 @@ export default {
                 this.itemReset(item, timestamp)
               } else {
                 // 不循环则删除数据
-                this.barrageList.splice(i, 1)
+                this.normalQueue.splice(i, 1)
               }
             }
           } else {
@@ -131,13 +151,13 @@ export default {
             }
             // 固定弹幕
             this.fixMove(item, timestamp)
-            this.barrageList.splice(i, 1)
+            this.normalQueue.splice(i, 1)
           }
         } else {
           // 弹幕初始化
           this.itemReset(item, timestamp)
         }
-      }
+      })
 
       // 更新队列
       this.queueRefresh(timestamp)
@@ -183,24 +203,16 @@ export default {
       }
     },
     itemReset (item, timestamp) {
-      // this.id= null;
-      // this.avatar= '#';
-      // this.msg= null;
-      // this.barrageStyle= 'normal';
-      // this.time= 10;//单位秒;默认10秒
-      // this.type= '0';// 0:滚动 1:固定
-      // this.position = 'normal'; // normal:随机 top:顶部 bottom:底部
-
-      item.type = (typeof item.type === 'undefined') ? 0 : parseInt(item.type)
-      item.position = (typeof item.position === 'undefined') ? 'top' : item.position
-      item.barrageStyle = (typeof item.barrageStyle === 'undefined') ? 'normal' : item.barrageStyle
+      item.type = item.type || MESSAGE_TYPE.NORMAL
+      item.position = item.position || 'top'
+      item.barrageStyle = item.barrageStyle || 'normal'
       item.startTime = timestamp
       item.currentTime = timestamp
       item.speed = this.boxWidthVal / (item.time * 1000)
       item.width = this.strlen(item.msg) * 9 + 50
-      if (item.type === 0) {
+      if (item.type === MESSAGE_TYPE.NORMAL) {
         item.left = this.boxWidthVal
-        item.top = parseInt(Math.random() * this.boxHeightVal)
+        item.top = parseInt(Math.random() * this.laneNum) * (this.messageHeight + this.messageGap * 2) - this.messageGap
       } else {
         item.left = (this.boxWidthVal - item.width) / 2
         if (item.position === 'top') {
@@ -244,38 +256,5 @@ export default {
     width: 100%;
     height: 100%;
     overflow:hidden;
-
-    .baberrage-item {
-      position: absolute;
-      width:auto;
-      display:block;
-      color:#000;
-      padding:5px 8px;
-      text-align:left;
-
-      .baberrage-avatar {
-        float:left;
-        width:30px;
-        height:30px;
-        border-radius:50px;
-        overflow: hidden;
-
-        img {
-          width:30px;
-        }
-      }
-
-      .baberrage-msg{
-        float:left;
-        line-height:30px;
-        padding-left:8px;
-      }
-    }
-
-    .baberrage-item.normal{
-      background:rgba(0,0,0,.7);
-      border-radius:100px;
-      color:#FFF;
-    }
 }
 </style>
