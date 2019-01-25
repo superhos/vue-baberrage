@@ -1,31 +1,63 @@
-# vue-baberrage 2.1.1
 
-[![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+<h1 align="center">
+  <br>
+  <a href="#" style="border-radius:50px;padding:10px;box-sizing:border-box;background:#000;display:inline-block;" ><img src="https://raw.githubusercontent.com/superhos/vue-baberrage/master/docs/logo.png" alt="VueBaberrage" style="border-radius:150px;box-sizing:border-box;" width="200"></a>
+  <br>
+	<br>
+</h1>
 
-Barrage plugin for Vue.js
+<h4 align="center">Barrage plugin for Vue.js.</h4>
+<p align="center">
+<img alt="" src="https://img.shields.io/badge/vueBaberrage.js-2.1.2-green.svg">
+<img alt="" src="https://img.shields.io/badge/vue.js-2.5.22-brightgreen.svg">
+<img alt="" src="https://img.shields.io/badge/minified size-20kB-blue.svg">
+<img alt="" src="https://img.shields.io/badge/License-MIT-orange.svg">
+</p>
 
-![old_version](https://raw.githubusercontent.com/superhos/vue-baberrage/master/screenshot/demo.gif)
+<p align="center">
+  <a href="#overview">Overview</a> •
+  <a href="#overview">Overview</a> •
+  <a href="#demo">Demo</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#plugin-options">Plug Options</a> •
+  <a href="#roadmap">Roadmap</a>
+</p>
+
+## Introduction
+
+Baberrage is one of the popular comment perform style in China.
+
+## Overview
+
+![new_version](https://raw.githubusercontent.com/superhos/vue-baberrage/master/screenshot/demo.gif)
+
+GIF performance is not good enough. Please refer to [DEMO](http://blog.chenhaotaishuaile.com/vue-baberrage/) page
 
 [中文文档](/docs/zh/README.md)
+
+## Demo
+
+See the [DEMO](http://blog.chenhaotaishuaile.com/vue-baberrage/) page
 
 ## Installation
 
 1) Install package via NPM
 
 ```bash
-npm install vue-baberrage
+npm i vue-baberrage
 ```
 2) Install plugin within project
 
 ```javascript
 import Vue from 'vue'
-import vueBaberrage from 'vue-baberrage'
-Vue.use(vueBaberrage);
+import { vueBaberrage } from 'vue-baberrage'
+Vue.use(vueBaberrage)
 ```
 or
 
 ```javascript
-const vueBaberrage = request('vue-baberrage');
+const vueBaberrage = request('vue-baberrage').vueBaberrage
 ```
 
 or
@@ -53,6 +85,8 @@ or
 2) Script
 
 ```javascript
+import { MESSAGE_TYPE } from 'vue-baberrage'
+
 export default {
   name: 'app',
   data () {
@@ -70,10 +104,8 @@ export default {
         id: ++this.currentId,
         avatar: "./static/avatar.jpg",
         msg: this.msg,
-        // barrageStyle: "normal",
         time: 5,
-        type: 0,
-        position: 'bottom'
+        type: MESSAGE_TYPE.NORMAL
       });
   ...
 ```
@@ -103,6 +135,11 @@ Just two step, and add new barrage message by pushing data into the `barrageList
 	- Default: `window's Height`
 	- Acceptable-Values: Number
 	- Function: Determine the height of the stage.
+
+#### messageHeight
+	- Default: `message's Height`
+	- Acceptable-Values: Number
+	- Function: Determine the height of the message.
 
 #### loop
 	- Default: `false`
@@ -137,16 +174,11 @@ Just two step, and add new barrage message by pushing data into the `barrageList
 	- Function: How long does the barrage message show.(Seconds)
 
 #### type
-	- Default: `0`
-	- Acceptable-Values: Number
+	- Default: MESSAGE_TYPE.NORMAL
+	- Acceptable-Values: Symbol
 	- Function: The type of the barrage message. 
-				0 for scroll from right to left. 
-				1 for fixed on the top or bottom of the stage.
-
-#### position
-	- Default: `top`
-	- Acceptable-Values: Boolean
-	- Function: Determine the position of the barrage message when the type is 0.
+				MESSAGE_TYPE.NORMAL for scroll from right to left. 
+				MESSAGE_TYPE.FROM_TOP for fixed on the top of the stage.
 
 ## Events
 
@@ -161,7 +193,7 @@ Just two step, and add new barrage message by pushing data into the `barrageList
 	      >
 ```
 
-## Log
+## Roadmap
 
 #### Version 0.0.1
 - Realized the basic functionality.
@@ -172,3 +204,10 @@ Just two step, and add new barrage message by pushing data into the `barrageList
 #### Version 1.2.0
 - Code specification
 - Performance improvement.
+
+#### Version 2.1.2
+- Using ES6.
+- Performance improvement.
+
+## Future
+I am developing `Vue-Baberrage-Plus`, difference between `Vue-Barrage` and `Vue-Baberrage-Plus` is former will be used for a tool, and `Plus` is a baberrage system.

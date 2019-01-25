@@ -42,7 +42,7 @@ export default {
         this.barrageList.push({
           id: ++this.currentId,
           avatar: './static/avatar.jpg',
-          msg: this.msg,
+          msg: this.msg + this.currentId,
           barrageStyle: 'top',
           time: 8,
           type: MESSAGE_TYPE.FROM_TOP,

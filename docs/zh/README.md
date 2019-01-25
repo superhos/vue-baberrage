@@ -1,16 +1,47 @@
-# vue-baberrage 1.2.0
 
-[![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+<h1 align="center">
+  <br>
+  <a href="#" style="border-radius:50px;padding:10px;box-sizing:border-box;background:#000;display:inline-block;" ><img src="https://raw.githubusercontent.com/superhos/vue-baberrage/master/docs/logo.png" alt="VueBaberrage" style="border-radius:150px;box-sizing:border-box;" width="200"></a>
+  <br>
+	<br>
+</h1>
 
-Vue.js 弹幕插件
+<h4 align="center">基于Vue.js弹幕插件</h4>
+<p align="center">
+<img alt="" src="https://img.shields.io/badge/vueBaberrage.js-2.1.2-green.svg">
+<img alt="" src="https://img.shields.io/badge/vue.js-2.5.22-brightgreen.svg">
+<img alt="" src="https://img.shields.io/badge/minified size-20kB-blue.svg">
+<img alt="" src="https://img.shields.io/badge/License-MIT-orange.svg">
+</p>
 
-![old_version](https://raw.githubusercontent.com/superhos/vue-baberrage/master/screenshot/demo.gif)
+<p align="center">
+  <a href="#overview">Overview</a> •
+  <a href="#demo">Demo</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#plugin-options">Plug Options</a> •
+  <a href="#roadmap">Roadmap</a>
+</p>
 
-## 设计概念
+## Introduction
 
-有人问到为什么没有提供全局调用的插入弹幕方法，初衷是因为希望弹幕数据部分还是交由Vuex中心状态去管理。
+弹幕是中国较受欢迎的弹幕展示方式。
 
-## 安装
+## Future
+
+目前正在开发`Vue-Baberrage-Plus`，比较两个项目，`Vue-Baberrage`的定位是即开箱即用的小插件，而`Plus`则是一套完整的弹幕解决方案，包括会提供更流畅的展示方式，更丰富的交互方式，更完善的接入方式等。(2019-01-25)
+
+## Overview
+
+![new_version](https://raw.githubusercontent.com/superhos/vue-baberrage/master/screenshot/demo.gif)
+
+GIF看起来效果太差了. 可以直接去 [DEMO](http://blog.chenhaotaishuaile.com/vue-baberrage/) 页看效果
+
+## Demo
+
+[DEMO](http://blog.chenhaotaishuaile.com/vue-baberrage/) 页
+
+## Installation
 
 1) Install package via NPM
 
@@ -21,13 +52,13 @@ npm install vue-baberrage
 
 ```javascript
 import Vue from 'vue'
-import vueBaberrage from 'vue-baberrage'
-Vue.use(vueBaberrage);
+import { vueBaberrage } from 'vue-baberrage'
+Vue.use(vueBaberrage)
 ```
 or
 
 ```javascript
-const vueBaberrage = request('vue-baberrage');
+const vueBaberrage = request('vue-baberrage').vueBaberrage
 ```
 
 or
@@ -36,7 +67,7 @@ or
 <script src="./dist/vue-baberrage.js"></script>
 ```
 
-## 使用
+## Usage
 
 1) Template
 `isShow` and `barrageList` are necessary.
@@ -55,6 +86,8 @@ or
 2) Script
 
 ```javascript
+import { MESSAGE_TYPE } from 'vue-baberrage'
+
 export default {
   name: 'app',
   data () {
@@ -72,10 +105,8 @@ export default {
         id: ++this.currentId,
         avatar: "./static/avatar.jpg",
         msg: this.msg,
-        // barrageStyle: "normal",
         time: 5,
-        type: 0,
-        position: 'bottom'
+        type: MESSAGE_TYPE.NORMAL,
       });
   ...
 ```
@@ -84,7 +115,7 @@ export default {
 
 两步即可， 当有新的数据加入到`barrageList`，就会以弹幕形式展现出来，建议`barrageList`放在Vuex中。
 
-## 插件选项
+## Plugin Options
 
 #### isShow
 	- Default: `true`
@@ -139,11 +170,11 @@ export default {
 	- Function: 弹幕展示的时间（单位：秒）
 
 #### type
-	- Default: `0`
-	- Acceptable-Values: Number
+	- Default: MESSAGE_TYPE.NORMAL
+	- Acceptable-Values: Symbol
 	- Function: 弹幕的类型
-				0 ： 正常从右到左滚动
-				1 ： 固定在弹幕区域上方
+				MESSAGE_TYPE.NORMAL ： 正常从右到左滚动
+				MESSAGE_TYPE.FROM_TOP ： 固定在弹幕区域上方
 
 #### position
 	- Default: `top`
@@ -163,7 +194,7 @@ export default {
 	      >
 ```
 
-## Log
+## Roadmap
 
 #### Version 0.0.1
 - 实现基本功能.

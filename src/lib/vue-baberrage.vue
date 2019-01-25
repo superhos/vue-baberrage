@@ -145,15 +145,17 @@ export default {
                 this.normalQueue.splice(i, 1)
               }
             }
-          } else {
+          }
+        } else {
+          if (item.type === MESSAGE_TYPE.FROM_TOP) {
             if (item.position !== 'top' && item.position !== 'bottom') {
               throw new Error('Position only between top and bottom when the type equal 1')
             }
+
             // 固定弹幕
             this.fixMove(item, timestamp)
             this.normalQueue.splice(i, 1)
           }
-        } else {
           // 弹幕初始化
           this.itemReset(item, timestamp)
         }
@@ -165,42 +167,36 @@ export default {
     // 正常移动
     normalMove (item, timestamp) {
       // 时间差
-      var progress = timestamp - item.currentTime
+      let progress = timestamp - item.currentTime
       item.currentTime = timestamp
       // 移动距离
-      var moveVal = item.speed * progress
+      let moveVal = item.speed * progress
 
       // 如果移动距离为0或者NaN 跳过，保持动画连续和减少重绘
       if (moveVal <= 0 || isNaN(moveVal)) return
       item.left -= moveVal
       // 设置移动
-      this.$set(item, 'style', {
-        transform: 'translate3d(' + item.left + 'px,' + item.top + 'px,0px)',
-        width: item.width + 'px'
-      })
+      this.moveTo(item, {x: item.left, y: item.top})
     },
     // 固定弹幕
     fixMove (item, timestamp) {
       // 判断是否在队列中
-      if (this[item.position + 'Queue'].indexOf(item) === -1) {
+      if (!this[item.position + 'Queue'].includes(item)) {
         this[item.position + 'Queue'].push(item)
       }
     },
     // 队列数据刷新
     queueRefresh (currentTime) {
-      var item
-      for (var i in this.topQueue) {
-        item = this.topQueue[i]
+      this.topQueue.forEach(item => {
         if (item.startTime + item.time * 1000 <= currentTime) {
           this.topQueue.shift()
         }
-      }
-      for (var j in this.bottomQueue) {
-        item = this.bottomQueue[j]
+      })
+      this.bottomQueue.forEach(item => {
         if (item.startTime + item.time * 1000 <= currentTime) {
           this.bottomQueue.shift()
         }
-      }
+      })
     },
     itemReset (item, timestamp) {
       item.type = item.type || MESSAGE_TYPE.NORMAL
@@ -216,27 +212,23 @@ export default {
       } else {
         item.left = (this.boxWidthVal - item.width) / 2
         if (item.position === 'top') {
-          item.top = this[item.position + 'Queue'].length * 45 + 5
+          item.top = (this[item.position + 'Queue'].length - 1) * this.messageHeight + this.messageGap * 2
         } else {
-          item.top = this.boxHeightVal - (this[item.position + 'Queue'].length * 45 + 100)
+          item.top = this.boxHeightVal - (this[item.position + 'Queue'].length * this.messageHeight + 100)
         }
       }
+      this.moveTo(item, {x: item.left, y: item.top})
+    },
+    moveTo (item, {x, y}) {
       this.$set(item, 'style', {
         transform: 'translate3d(' + item.left + 'px,' + item.top + 'px,0)'
       })
     },
     // ========================= Tools ===========================
-    extend (defaultSetting, option) {
-      for (var key in option) {
-        defaultSetting[key] = option[key]
-      }
-
-      return defaultSetting
-    },
     // 计算中英文的长度
     strlen (str) {
-      var len = 0
-      for (var i in str) {
+      let len = 0
+      for (let i in str) {
         if (str.charCodeAt(i) > 127 || str.charCodeAt(i) === 94) {
           len += 2
         } else {
