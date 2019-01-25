@@ -30,7 +30,7 @@ Baberrage is one of the popular comment perform style in China.
 
 ## Overview
 
-![new_version](https://raw.githubusercontent.com/superhos/vue-baberrage/master/screenshot/demo.gif)
+![new_version](https://raw.githubusercontent.com/superhos/vue-baberrage/master/screenshot/demo-show.gif)
 
 GIF performance is not good enough. Please refer to [DEMO](http://blog.chenhaotaishuaile.com/vue-baberrage/) page
 
