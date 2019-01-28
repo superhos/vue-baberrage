@@ -1,19 +1,23 @@
 <template>
   <div id="app">
-    <vue-baberrage
-      :isShow= "barrageIsShow"
-      :barrageList = "barrageList"
-      :loop = "barrageLoop"
-      >
-    </vue-baberrage>
+    <div class="stage">
+      <vue-baberrage
+        :isShow= "barrageIsShow"
+        :barrageList = "barrageList"
+        :loop = "barrageLoop"
+        :maxWordCount = "60"
+        >
+      </vue-baberrage>
+    </div>
     <div class="demo-control">
-      <select v-model="position">
-        <option value="top">从上</option>
-        <option value="abc">从右</option>
-      </select>
-      <input type="text" style="float:left"  v-model="msg" />
-      <button type="button" style="float:left" @click="addToList">Add</button>
-      <button type="button" style="float:left" @click="removeList">Remove</button>
+      <div>
+        <select v-model="position">
+          <option value="top">从上</option>
+          <option value="abc">从右</option>
+        </select>
+        <input type="text" style="float:left"  v-model="msg" />
+        <button type="button" style="float:left" @click="addToList">Add</button>
+      </div>
     </div>
   </div>
 </template>
@@ -63,6 +67,13 @@ export default {
 </script>
 
 <style lang="scss">
+html, body, #app, .stage {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  position: relative;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -99,15 +110,23 @@ a {
 
 .demo-control{
     position: absolute;
-    left: 40%;
-    width: 400px;
+    margin: 0 auto;
+    width: 100%;
     bottom: 300px;
+    top: 70%;
+    height: 69px;
+    box-sizing: border-box;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+
+  div {
+    width: 300px;
     background: rgba(0, 0, 0, 0.6);
     padding: 15px;
     border-radius: 5px;
     border: 2px solid #8ad9ff;
-    top: 70%;
-    height: 35px;
+  }
 
   input,button,select{
     height:35px;
@@ -117,7 +136,7 @@ a {
     border:1px solid #CCC;
     color:#FFF;
     border-radius:0;
-    width:15%;
+    width:18%;
     box-sizing: border-box;
   }
 
@@ -129,7 +148,7 @@ a {
   }
 
   input{
-    width:55%;
+    width:64%;
     height:35px;
     background:rgba(0,0,0,.7);
     border:1px solid #8ad9ff;

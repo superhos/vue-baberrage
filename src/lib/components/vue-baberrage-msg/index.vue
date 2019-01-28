@@ -26,13 +26,16 @@ export default {
   width:auto;
   display:block;
   color:#000;
-  padding:5px 8px;
+  padding:5px 8px 5px 38px;
   text-align:left;
+  white-space:nowrap;
 
   .baberrage-avatar {
-    float:left;
+    position: absolute;
     width:30px;
     height:30px;
+    left: 8px;
+    top: 5px;
     border-radius:50px;
     overflow: hidden;
 
@@ -42,9 +45,9 @@ export default {
   }
 
   .baberrage-msg{
-    float:left;
     line-height:30px;
     padding-left:8px;
+    white-space:nowrap;
   }
 }
 

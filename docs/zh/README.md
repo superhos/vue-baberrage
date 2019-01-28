@@ -137,6 +137,16 @@ export default {
 	- Acceptable-Values: Number
 	- Function: 显示弹幕区域的高度
 
+#### messageHeight
+	- Default: `message's Height`
+	- Acceptable-Values: Number
+	- Function: 弹幕高度
+
+#### maxWordCount
+	- Default: `60`
+	- Acceptable-Values: Number
+	- Function: 弹幕最大字数长度，超过则忽略（中文占2长度，英文占1长度）
+
 #### loop
 	- Default: `false`
 	- Acceptable-Values: Boolean

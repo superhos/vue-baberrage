@@ -141,6 +141,11 @@ Just two step, and add new barrage message by pushing data into the `barrageList
 	- Acceptable-Values: Number
 	- Function: Determine the height of the message.
 
+#### maxWordCount
+	- Default: `60`
+	- Acceptable-Values: Number
+	- Function: Determine the word count of the message.
+
 #### loop
 	- Default: `false`
 	- Acceptable-Values: Boolean

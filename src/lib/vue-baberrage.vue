@@ -53,6 +53,10 @@ export default {
     loop: {
       type: Boolean,
       default: false
+    },
+    maxWordCount: {
+      type: Number,
+      default: 20
     }
   },
   data () {
@@ -66,7 +70,9 @@ export default {
       readyId: 0,
       topQueue: [], // 顶部队列
       bottomQueue: [], // 底部队列
-      normalQueue: [] // 正常队列，新弹幕先进入队列，一定时限内再显示在ShowList
+      normalQueue: [], // 正常队列，新弹幕先进入队列，一定时限内再显示在ShowList
+      randomInd: 0, // 用指针来代替频繁环操作
+      randomShowQueue: [] // 随机展示位置环
     }
   },
   mounted () {
@@ -80,7 +86,8 @@ export default {
       this.boxHeightVal = this.boxHeightVal === 0 ? window.innerHeight : this.boxHeightVal
     }
 
-    this.laneNum = this.boxHeightVal / (this.messageHeight + this.messageGap * 2)
+    this.laneNum = Math.floor(this.boxHeightVal / (this.messageHeight + this.messageGap * 2))
+    this.shuffle()
 
     this.play()
   },
@@ -90,12 +97,29 @@ export default {
     }
   },
   methods: {
+    // init randomShowQueue
+    shuffle () {
+      let len = this.laneNum
+      let i
+      let temp
+      let array = Array.from({length: len}, (e, i) => i)
+      while (len > 0) {
+        i = Math.floor(Math.random() * len--)
+        temp = array[len]
+        array[len] = array[i]
+        array[i] = temp
+      }
+      this.randomShowQueue = array
+    },
     // 节流函数
     insertToReadyShowQueue () {
       clearTimeout(this.readyId)
       this.readyId = setTimeout(() => {
         while (this.barrageList.length > 0) {
-          this.normalQueue.push(this.barrageList.shift())
+          let current = this.barrageList.shift()
+          // 判断长度
+          if (this.strlen(current.msg) === 0 || this.strlen(current.msg) > this.maxWordCount) continue
+          this.normalQueue.push(current)
         }
         this.updateBarrageDate()
       }, 300)
@@ -208,7 +232,10 @@ export default {
       item.width = this.strlen(item.msg) * 9 + 50
       if (item.type === MESSAGE_TYPE.NORMAL) {
         item.left = this.boxWidthVal
-        item.top = parseInt(Math.random() * this.laneNum) * (this.messageHeight + this.messageGap * 2) - this.messageGap
+        // 选择位置
+        let laneInd = this.randomInd === this.laneNum ? this.randomInd = 0 : this.randomInd++
+        // 计算位置
+        item.top = this.randomShowQueue[laneInd] * (this.messageHeight + this.messageGap * 2) - this.messageGap
       } else {
         item.left = (this.boxWidthVal - item.width) / 2
         if (item.position === 'top') {
