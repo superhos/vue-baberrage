@@ -1,6 +1,6 @@
 {
   "name": "vue-baberrage",
-  "version": "2.1.5",
+  "version": "2.1.8",
   "description": "Berrage plugin for VUE.js",
   "author": "Sevenschan",
   "private": false,
@@ -30,6 +30,7 @@
     "babel-loader": "^7.1.5",
     "babel-plugin-dynamic-import-node": "^1.2.0",
     "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "babel-plugin-transform-runtime": "^6.22.0",
     "babel-plugin-transform-vue-jsx": "^3.7.0",

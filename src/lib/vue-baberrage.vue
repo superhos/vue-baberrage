@@ -13,6 +13,7 @@
 <script>
 import VueBaberrageMsg from './components/vue-baberrage-msg'
 import { MESSAGE_TYPE } from './constants/index.js'
+import { setTimeout } from 'timers'
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
 window.cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame || function (requestID) { clearTimeout(requestID) }
@@ -57,6 +58,10 @@ export default {
     maxWordCount: {
       type: Number,
       default: 20
+    },
+    throttleGap: {
+      type: Number,
+      default: 2000
     }
   },
   data () {
@@ -72,7 +77,10 @@ export default {
       bottomQueue: [], // 底部队列
       normalQueue: [], // 正常队列，新弹幕先进入队列，一定时限内再显示在ShowList
       randomInd: 0, // 用指针来代替频繁环操作
-      randomShowQueue: [] // 随机展示位置环
+      randomShowQueue: [], // 随机展示位置环
+      taskQueue: [],
+      taskIsRunning: false,
+      taskLastTime: null
     }
   },
   mounted () {
@@ -116,10 +124,17 @@ export default {
       clearTimeout(this.readyId)
       this.readyId = setTimeout(() => {
         while (this.barrageList.length > 0) {
-          let current = this.barrageList.shift()
+          let current = this.barrageList.splice(0, this.laneNum)
           // 判断长度
-          if (this.strlen(current.msg) === 0 || this.strlen(current.msg) > this.maxWordCount) continue
-          this.normalQueue.push(current)
+          // if (this.strlen(current.msg) === 0 || this.strlen(current.msg) > this.maxWordCount) continue
+          // this.normalQueue.push(current)
+
+          this.addTask(() => {
+            this.normalQueue = [
+              ...this.normalQueue,
+              ...current
+            ]
+          })
         }
         this.updateBarrageDate()
       }, 300)
@@ -250,6 +265,26 @@ export default {
       this.$set(item, 'style', {
         transform: 'translate3d(' + item.left + 'px,' + item.top + 'px,0)'
       })
+    },
+    addTask (fun) {
+      this.taskQueue.push(fun)
+      if (this.taskQueue.length > 0 && !this.taskIsRunning) {
+        this.taskIsRunning = true
+        window.requestAnimationFrame(this.runTask)
+      }
+    },
+    runTask (time) {
+      if (!this.taskLastTime || time - this.taskLastTime >= this.throttleGap) {
+        let func = this.taskQueue.shift()
+        this.taskLastTime = time
+        func()
+      }
+
+      if (this.taskQueue.length > 0) {
+        window.requestAnimationFrame(this.runTask)
+      } else {
+        this.taskIsRunning = false
+      }
     },
     // ========================= Tools ===========================
     // 计算中英文的长度
