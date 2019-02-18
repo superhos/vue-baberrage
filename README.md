@@ -142,7 +142,7 @@ Just two step, and add new barrage message by pushing data into the `barrageList
 	- Function: Determine the height of the message.
 
 #### maxWordCount
-	- Default: `60`
+	- Default: 60
 	- Acceptable-Values: Number
 	- Function: Determine the word count of the message.
 
@@ -150,6 +150,11 @@ Just two step, and add new barrage message by pushing data into the `barrageList
 	- Default: `false`
 	- Acceptable-Values: Boolean
 	- Function: Loop or not.
+
+#### throttleGap
+	- Default: 2000
+	- Acceptable-Values: Number
+	- Function: The gap time between the message
 
 ## Barrage Message Options
 

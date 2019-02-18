@@ -152,6 +152,11 @@ export default {
 	- Acceptable-Values: Boolean
 	- Function: 是否循环
 
+#### throttleGap
+	- Default: 2000
+	- Acceptable-Values: Number
+	- Function: 弹幕之间的节流时间
+
 ## 弹幕数据选项
 
 #### id

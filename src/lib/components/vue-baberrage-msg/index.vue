@@ -26,7 +26,7 @@ export default {
   width:auto;
   display:block;
   color:#000;
-  transform: translateX(200%);
+  transform: translateX(500%);
   padding:5px 8px 5px 38px;
   text-align:left;
   white-space:nowrap;
