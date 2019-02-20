@@ -8,7 +8,7 @@
 
 <h4 align="center">Barrage plugin for Vue.js.</h4>
 <p align="center">
-<img alt="" src="https://img.shields.io/badge/vueBaberrage.js-2.1.2-green.svg">
+<img alt="" src="https://img.shields.io/badge/vueBaberrage.js-2.1.9-green.svg">
 <img alt="" src="https://img.shields.io/badge/vue.js-2.5.22-brightgreen.svg">
 <img alt="" src="https://img.shields.io/badge/minified size-20kB-blue.svg">
 <img alt="" src="https://img.shields.io/badge/License-MIT-orange.svg">
@@ -218,6 +218,9 @@ Just two step, and add new barrage message by pushing data into the `barrageList
 #### Version 2.1.2
 - Using ES6.
 - Performance improvement.
+
+#### Version 2.1.9
+- Adding Throttling
 
 ## Future
 I am developing `Vue-Baberrage-Plus`, difference between `Vue-Barrage` and `Vue-Baberrage-Plus` is former will be used for a tool, and `Plus` is a baberrage system.
