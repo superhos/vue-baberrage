@@ -24,6 +24,10 @@
   <a href="#roadmap">Roadmap</a>
 </p>
 
+## Notification
+
+感谢关注，项目正在完全重写中，进度30%，ISSUE报道的BUG和需求都会在新版本中满足，之后的发布流程会更规范。再次感谢。
+
 ## Introduction
 
 Baberrage is one of the popular comment perform style in China.
