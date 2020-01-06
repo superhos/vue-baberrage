@@ -234,7 +234,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="less">
 .baberrage-stage{
   position: absolute;
     width: 100%;
