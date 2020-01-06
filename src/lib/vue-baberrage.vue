@@ -97,7 +97,7 @@ export default {
       this.boxHeightVal = this.boxHeightVal === 0 ? window.innerHeight : this.boxHeightVal
     }
 
-    this.laneNum = 3 // Math.floor(this.boxHeightVal / (this.messageHeight + this.messageGap * 2))
+    this.laneNum = Math.floor(this.boxHeightVal / (this.messageHeight + this.messageGap * 2))
     this.setUpLane()
     this.shuffle()
 
@@ -142,7 +142,7 @@ export default {
           })
         }
         this.updateBarrageDate()
-      }, 100)
+      }, 300)
     },
     // 更新弹幕数据
     updateBarrageDate (timestamp) {
