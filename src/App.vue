@@ -53,20 +53,23 @@ export default {
           position: 'top'
         })
       } else {
-        this.barrageList.push({
-          id: ++this.currentId,
-          avatar: './static/avatar.jpg',
-          msg: this.msg,
-          time: 15,
-          type: MESSAGE_TYPE.NORMAL
+        const arr = Array.from({length: 5}, e => {
+          return {
+            id: ++this.currentId,
+            avatar: './static/avatar.jpg',
+            msg: this.msg,
+            time: 15,
+            type: MESSAGE_TYPE.NORMAL
+          }
         })
+        this.barrageList.push(...arr)
       }
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="less">
 html, body, #app, .stage {
   width: 100%;
   height: 100%;

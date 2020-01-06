@@ -1,12 +1,14 @@
 <template>
   <div class="baberrage-stage" v-show="isShow" ref="stage">
     <div class="baberrage-top">
-      <VueBaberrageMsg  v-for="item in topQueue" v-bind:key="item.id" class="baberrage-item" :item="item" />
+      <VueBaberrageMsg  v-for="item in topQueue" :key="item.id" class="baberrage-item" :item="item" />
     </div>
     <!-- Normal -->
-    <VueBaberrageMsg  v-for="item in normalQueue" v-bind:key="item.id" class="baberrage-item" :item="item" />
+    <div class="baberrage-lane" v-for="lane in lanes" :key="lane.id">
+      <VueBaberrageMsg  v-for="item in lane.laneQueue" :key="item.id" class="baberrage-item" :item="item" />
+    </div>
     <div class="baberrage-bottom">
-      <VueBaberrageMsg  v-for="item in bottomQueue" v-bind:key="item.id" class="baberrage-item" :item="item" />
+      <VueBaberrageMsg  v-for="item in bottomQueue" :key="item.id" class="baberrage-item" :item="item" />
     </div>
   </div>
 </template>
@@ -70,14 +72,15 @@ export default {
       boxHeightVal: this.boxHeight,
       loopVal: this.loop,
       laneNum: 0, // 将舞台分为固定泳道，防止弹幕重叠
+      lanes: [],
       startTime: 0,
       frameId: null,
       readyId: 0,
       topQueue: [], // 顶部队列
       bottomQueue: [], // 底部队列
       normalQueue: [], // 正常队列，新弹幕先进入队列，一定时限内再显示在ShowList
-      randomInd: 0, // 用指针来代替频繁环操作
-      randomShowQueue: [], // 随机展示位置环
+      showInd: 0, // 用指针来代替频繁环操作
+      indexShowQueue: [], // 随机展示位置环
       taskQueue: [],
       taskIsRunning: false,
       taskLastTime: null
@@ -94,7 +97,8 @@ export default {
       this.boxHeightVal = this.boxHeightVal === 0 ? window.innerHeight : this.boxHeightVal
     }
 
-    this.laneNum = Math.floor(this.boxHeightVal / (this.messageHeight + this.messageGap * 2))
+    this.laneNum = 3 // Math.floor(this.boxHeightVal / (this.messageHeight + this.messageGap * 2))
+    this.setUpLane()
     this.shuffle()
 
     this.play()
@@ -105,19 +109,20 @@ export default {
     }
   },
   methods: {
-    // init randomShowQueue
+    // 布置泳道
+    setUpLane () {
+      for (let i = 0; i < this.laneNum; i++) {
+        this.lanes.push({
+          id: i,
+          laneQueue: []
+        })
+      }
+    },
+    // init indexShowQueue
     shuffle () {
       let len = this.laneNum
-      let i
-      let temp
-      let array = Array.from({length: len}, (e, i) => i)
-      while (len > 0) {
-        i = Math.floor(Math.random() * len--)
-        temp = array[len]
-        array[len] = array[i]
-        array[i] = temp
-      }
-      this.randomShowQueue = array
+      // 按顺序展示
+      this.indexShowQueue = Array.from({length: len}, (e, i) => i)
     },
     // 节流函数
     insertToReadyShowQueue () {
@@ -137,7 +142,7 @@ export default {
           })
         }
         this.updateBarrageDate()
-      }, 300)
+      }, 100)
     },
     // 更新弹幕数据
     updateBarrageDate (timestamp) {
@@ -146,7 +151,6 @@ export default {
         this.move(timestamp)
       }
       if (this.normalQueue.length > 0 || this.topQueue.length > 0 || this.bottomQueue.length > 0) {
-        // console.log('go play')
         this.play()
       } else {
         // 如果弹幕序列为空发出事件 barrageListEmpty
@@ -248,9 +252,12 @@ export default {
       if (item.type === MESSAGE_TYPE.NORMAL) {
         item.left = this.boxWidthVal
         // 选择位置
-        let laneInd = this.randomInd === this.laneNum ? this.randomInd = 0 : this.randomInd++
+        let laneInd = this.showInd === this.laneNum ? this.showInd = 0 : this.showInd++
+        console.log(this.indexShowQueue[laneInd])
+        item.laneId = laneInd
+        this.lanes[laneInd].laneQueue.push(item)
         // 计算位置
-        item.top = this.randomShowQueue[laneInd] * (this.messageHeight + this.messageGap * 2) - this.messageGap
+        item.top = this.indexShowQueue[laneInd] * (this.messageHeight + this.messageGap * 2) - this.messageGap
       } else {
         item.left = (this.boxWidthVal - item.width) / 2
         if (item.position === 'top') {
@@ -304,11 +311,11 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="less">
 .baberrage-stage{
   position: absolute;
-    width: 100%;
-    height: 100%;
-    overflow:hidden;
+  width: 100%;
+  height: 100%;
+  overflow:hidden;
 }
 </style>
