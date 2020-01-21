@@ -1,6 +1,6 @@
 {
   "name": "vue-baberrage",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Berrage plugin for VUE.js",
   "author": "Sevenschan",
   "private": false,
@@ -18,6 +18,7 @@
     "url": "https://github.com/superhos/vue-baberrage"
   },
   "dependencies": {
+    "uuid": "^3.4.0",
     "vue": "^2.5.22"
   },
   "devDependencies": {

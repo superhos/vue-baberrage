@@ -5,7 +5,7 @@
     </div>
     <!-- Normal -->
     <div class="baberrage-lane" v-for="lane in lanes" :key="lane.id">
-      <VueBaberrageMsg  v-for="item in lane.laneQueue" :key="item.id" class="baberrage-item" :item="item" />
+      <VueBaberrageMsg  v-for="item in lane.laneQueue" :key="item.runtimeId" class="baberrage-item" :item="item" />
     </div>
     <div class="baberrage-bottom">
       <VueBaberrageMsg  v-for="item in bottomQueue" :key="item.id" class="baberrage-item" :item="item" />
@@ -13,6 +13,7 @@
   </div>
 </template>
 <script>
+import uuidv4 from 'uuid/v4'
 import VueBaberrageMsg from './components/vue-baberrage-msg'
 import { MESSAGE_TYPE } from './constants/index.js'
 import { setTimeout } from 'timers'
@@ -181,7 +182,7 @@ export default {
             // 退出条件
             if (item.left + item.width < 0) {
               // 清理弹幕 防止内存泄漏
-              const indx = this.lanes[item.laneId].laneQueue.findIndex(e => e.id === item.id)
+              const indx = this.lanes[item.laneId].laneQueue.findIndex(e => e.runtimeId === item.runtimeId)
               this.lanes[item.laneId].laneQueue.splice(indx, 1)
               if (this.loopVal) {
                 // 如果循环则重新加入数据
@@ -244,6 +245,7 @@ export default {
       })
     },
     itemReset (item, timestamp) {
+      item.runtimeId = uuidv4()
       item.type = item.type || MESSAGE_TYPE.NORMAL
       item.position = item.position || 'top'
       item.barrageStyle = item.barrageStyle || 'normal'
