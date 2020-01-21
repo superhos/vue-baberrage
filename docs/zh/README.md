@@ -8,7 +8,7 @@
 
 <h4 align="center">基于Vue.js弹幕插件</h4>
 <p align="center">
-<img alt="" src="https://img.shields.io/badge/vueBaberrage.js-3.0.1-green.svg">
+<img alt="" src="https://img.shields.io/badge/vueBaberrage.js-3.0.2-green.svg">
 <img alt="" src="https://img.shields.io/badge/vue.js-2.5.22-brightgreen.svg">
 <img alt="" src="https://img.shields.io/badge/minified size-20kB-blue.svg">
 <img alt="" src="https://img.shields.io/badge/License-MIT-orange.svg">
