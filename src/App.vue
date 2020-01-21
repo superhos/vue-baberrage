@@ -24,16 +24,17 @@
 
 <script>
 import { MESSAGE_TYPE } from './lib/index.js'
+import pkg from '../package.json'
 
 export default {
   name: 'app',
   data () {
     return {
-      msg: 'Hello World!vue-baberrage 2.1.0!',
+      msg: `Hello World!vue-baberrage ${pkg.version}!`,
       position: 'top',
       barrageIsShow: true,
       currentId: 0,
-      barrageLoop: false,
+      barrageLoop: true,
       barrageList: []
     }
   },

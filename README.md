@@ -8,7 +8,7 @@
 
 <h4 align="center">Barrage plugin for Vue.js.</h4>
 <p align="center">
-<img alt="" src="https://img.shields.io/badge/vueBaberrage.js-2.1.9-green.svg">
+<img alt="" src="https://img.shields.io/badge/vueBaberrage.js-3.0.1-green.svg">
 <img alt="" src="https://img.shields.io/badge/vue.js-2.5.22-brightgreen.svg">
 <img alt="" src="https://img.shields.io/badge/minified size-20kB-blue.svg">
 <img alt="" src="https://img.shields.io/badge/License-MIT-orange.svg">
@@ -23,10 +23,6 @@
   <a href="#plugin-options">Plug Options</a> •
   <a href="#roadmap">Roadmap</a>
 </p>
-
-## Notification
-
-感谢关注，项目正在完全重写中，进度30%，ISSUE报道的BUG和需求都会在新版本中满足，之后的发布流程会更规范。再次感谢。
 
 ## Introduction
 

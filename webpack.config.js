@@ -3,22 +3,23 @@ const webpack = require('webpack')
 
 module.exports = {
   // Development Config
-  entry: './src/main.js',
-  output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
-    filename: 'build.js'
-  },
-  // Libirary Config
-  // entry: './src/lib/index.js',
+  // entry: './src/main.js',
   // output: {
   //   path: path.resolve(__dirname, './dist'),
   //   publicPath: '/dist/',
-  //   filename: 'vue-baberrage.js',
-  //   library: 'vue-baberrage',
-  //   libraryTarget: 'umd',
-  //   umdNamedDefine: true
+  //   filename: 'build.js'
   // },
+  // Libirary Config
+  mode: 'production',
+  entry: './src/lib/index.js',
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    publicPath: '/dist/',
+    filename: 'vue-baberrage.js',
+    library: 'vue-baberrage',
+    libraryTarget: 'umd',
+    umdNamedDefine: true
+  },
   module: {
     rules: [
       {

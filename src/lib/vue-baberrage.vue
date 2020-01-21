@@ -180,11 +180,13 @@ export default {
             this.normalMove(item, timestamp)
             // 退出条件
             if (item.left + item.width < 0) {
+              // 清理弹幕 防止内存泄漏
+              const indx = this.lanes[item.laneId].laneQueue.findIndex(e => e.id === item.id)
+              this.lanes[item.laneId].laneQueue.splice(indx, 1)
               if (this.loopVal) {
-                // 如果循环则不删除数据
+                // 如果循环则重新加入数据
                 this.itemReset(item, timestamp)
               } else {
-                // 不循环则删除数据
                 this.normalQueue.splice(i, 1)
               }
             }
@@ -248,16 +250,28 @@ export default {
       item.startTime = timestamp
       item.currentTime = timestamp
       item.speed = this.boxWidthVal / (item.time * 1000)
-      item.width = this.strlen(item.msg) * 9 + 50
+      item.width = this.strlen(item.msg) * 9 + 20
       if (item.type === MESSAGE_TYPE.NORMAL) {
-        item.left = this.boxWidthVal
         // 选择位置
-        let laneInd = this.showInd === this.laneNum ? this.showInd = 0 : this.showInd++
-        console.log(this.indexShowQueue[laneInd])
+        if (this.showInd + 1 > this.laneNum) {
+          this.showInd = 0
+        }
+        let laneInd = this.showInd
         item.laneId = laneInd
+        let lastLeft = this.boxWidthVal + item.width
+        if (this.lanes[laneInd].laneQueue.length > 0) {
+          const last = this.lanes[laneInd].laneQueue[this.lanes[laneInd].laneQueue.length - 1]
+          if (last.left > this.boxWidthVal) {
+            lastLeft = last.width + last.left
+          } else {
+            lastLeft += last.width
+          }
+        }
         this.lanes[laneInd].laneQueue.push(item)
         // 计算位置
         item.top = this.indexShowQueue[laneInd] * (this.messageHeight + this.messageGap * 2) - this.messageGap
+        item.left = lastLeft
+        this.showInd++
       } else {
         item.left = (this.boxWidthVal - item.width) / 2
         if (item.position === 'top') {
