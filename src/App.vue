@@ -2,21 +2,24 @@
   <div id="app">
     <div class="stage">
       <vue-baberrage
+        ref="baberrage"
         :isShow= "barrageIsShow"
         :barrageList = "barrageList"
         :loop = "barrageLoop"
         :maxWordCount = "60"
+        :hoverLanePause = "hoverLanePause"
         >
       </vue-baberrage>
     </div>
     <div class="demo-control">
       <div>
         <select v-model="position">
-          <option value="top">从上</option>
-          <option value="abc">从右</option>
+          <!-- <option value="top">从上</option> -->
+          <option value="normal">从右</option>
         </select>
-        <input type="text" style="float:left"  v-model="msg" />
-        <button type="button" style="float:left" @click="addToList">Add</button>
+        <input type="text" v-model="msg" />
+        <button type="button" @click="addToList">Add</button>
+        <button type="button" @click="pauseBaberrage">Pause</button>
       </div>
     </div>
   </div>
@@ -31,10 +34,11 @@ export default {
   data () {
     return {
       msg: `Hello World!vue-baberrage ${pkg.version}!`,
-      position: 'top',
+      position: 'normal',
       barrageIsShow: true,
       currentId: 0,
       barrageLoop: true,
+      hoverLanePause: true, // 鼠标移动到上面的时候 会暂停泳道滚动
       barrageList: []
     }
   },
@@ -65,6 +69,10 @@ export default {
         })
         this.barrageList.push(...arr)
       }
+    },
+    // 暂停弹幕
+    pauseBaberrage () {
+      this.$refs.baberrage.pause()
     }
   }
 }
@@ -116,7 +124,7 @@ a {
     position: absolute;
     margin: 0 auto;
     width: 100%;
-    bottom: 300px;
+    bottom: 380px;
     top: 70%;
     height: 69px;
     box-sizing: border-box;
@@ -130,17 +138,19 @@ a {
     padding: 15px;
     border-radius: 5px;
     border: 2px solid #8ad9ff;
+    display: flex;
+    justify-content: center;
   }
 
   input,button,select{
     height:35px;
+    width: 15%;
+    min-width: 15%;
     padding:0;
-    float:left;
     background:#027fbb;
     border:1px solid #CCC;
     color:#FFF;
     border-radius:0;
-    width:18%;
     box-sizing: border-box;
   }
 
@@ -152,8 +162,10 @@ a {
   }
 
   input{
-    width:64%;
+    flex: 1;
     height:35px;
+    width: 50%;
+    min-width: 50%;
     background:rgba(0,0,0,.7);
     border:1px solid #8ad9ff;
     padding-left:5px;
