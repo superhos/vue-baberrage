@@ -14,7 +14,7 @@
 </template>
 <script>
 import uuidv4 from 'uuid/v4'
-import VueBaberrageMsg from './components/vue-baberrage-msg'
+import VueBaberrageMsg from './components/vue-baberrage-msg/index.vue'
 import { MESSAGE_TYPE } from './constants/index.js'
 import { setTimeout } from 'timers'
 
@@ -65,6 +65,10 @@ export default {
     throttleGap: {
       type: Number,
       default: 2000
+    },
+    // 放置函数
+    posRender: {
+      type: Function,
     }
   },
   data () {
@@ -93,13 +97,7 @@ export default {
       this.boxWidthVal = this.$refs.stage.parentNode.offsetWidth + 50
     }
 
-    if (this.boxHeightVal === 0) {
-      this.boxHeightVal = this.$refs.stage.parentNode.offsetHeight
-      this.boxHeightVal = this.boxHeightVal === 0 ? window.innerHeight : this.boxHeightVal
-    }
-
-    this.laneNum = Math.floor(this.boxHeightVal / (this.messageHeight + this.messageGap * 2))
-    this.setUpLane()
+    this.setUpLane(this.boxHeightVal)
     this.shuffle()
 
     this.play()
@@ -107,16 +105,33 @@ export default {
   watch: {
     barrageList (newBarrageList) {
       this.insertToReadyShowQueue()
+    },
+    boxHeight (newHeight) {
+      this.setUpLane(newHeight)
     }
   },
   methods: {
     // 布置泳道
-    setUpLane () {
-      for (let i = 0; i < this.laneNum; i++) {
-        this.lanes.push({
-          id: i,
-          laneQueue: []
-        })
+    setUpLane (newHeight) {
+      // 舞台高度变化重新计算泳道
+      if (newHeight === 0) {
+        newHeight = this.$refs.stage.parentNode.offsetHeight
+        newHeight = newHeight === 0 ? window.innerHeight : newHeight
+      }
+
+      this.boxHeightVal = newHeight
+      const oldLaneNum = this.laneNum >>> 0
+      this.laneNum = Math.floor(newHeight / (this.messageHeight + this.messageGap * 2))
+      // 计算泳道数量
+      if (oldLaneNum < this.laneNum) {
+        for (let i = oldLaneNum; i < this.laneNum; i++) {
+          this.lanes.push({
+            id: i,
+            laneQueue: []
+          })
+        }
+      } else {
+        this.lanes.splice(this.laneNum)
       }
     },
     // init indexShowQueue
@@ -131,10 +146,6 @@ export default {
       this.readyId = setTimeout(() => {
         while (this.barrageList.length > 0) {
           let current = this.barrageList.splice(0, this.laneNum)
-          // 判断长度
-          // if (this.strlen(current.msg) === 0 || this.strlen(current.msg) > this.maxWordCount) continue
-          // this.normalQueue.push(current)
-
           this.addTask(() => {
             this.normalQueue = [
               ...this.normalQueue,
@@ -182,6 +193,7 @@ export default {
             // 退出条件
             if (item.left + item.width < 0) {
               // 清理弹幕 防止内存泄漏
+              if (!this.lanes[item.laneId]) return
               const indx = this.lanes[item.laneId].laneQueue.findIndex(e => e.runtimeId === item.runtimeId)
               this.lanes[item.laneId].laneQueue.splice(indx, 1)
               if (this.loopVal) {
@@ -244,6 +256,24 @@ export default {
         }
       })
     },
+    // 选择空闲可以插入的泳道
+    selectPos () {
+      // 如果有用户设置的函数函数则使用用户的
+      if (this.posRender) {
+        // 传入参数为当前所有泳道
+        return this.posRender(this.lanes)
+      } else {
+        // 根据模式选择
+        if (this.showInd + 1 > this.laneNum) {
+          this.showInd = 0
+        }
+        return this.showInd++
+      }
+    },
+    isWaiting (msg) {
+      // 如果弹幕left大于舞台宽度 则判断为正在等待状态
+      return msg.left > this.boxWidthVal
+    },
     itemReset (item, timestamp) {
       item.runtimeId = uuidv4()
       item.type = item.type || MESSAGE_TYPE.NORMAL
@@ -254,13 +284,9 @@ export default {
       item.speed = this.boxWidthVal / (item.time * 1000)
       item.width = this.strlen(item.msg) * 9 + 20
       if (item.type === MESSAGE_TYPE.NORMAL) {
-        // 选择位置
-        if (this.showInd + 1 > this.laneNum) {
-          this.showInd = 0
-        }
-        let laneInd = this.showInd
+        let laneInd = this.selectPos()
         item.laneId = laneInd
-        let lastLeft = this.boxWidthVal + item.width
+        let lastLeft = this.boxWidthVal
         if (this.lanes[laneInd].laneQueue.length > 0) {
           const last = this.lanes[laneInd].laneQueue[this.lanes[laneInd].laneQueue.length - 1]
           if (last.left > this.boxWidthVal) {
@@ -273,7 +299,6 @@ export default {
         // 计算位置
         item.top = this.indexShowQueue[laneInd] * (this.messageHeight + this.messageGap * 2) - this.messageGap
         item.left = lastLeft
-        this.showInd++
       } else {
         item.left = (this.boxWidthVal - item.width) / 2
         if (item.position === 'top') {

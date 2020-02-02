@@ -3,6 +3,7 @@
     <div class="stage">
       <vue-baberrage
         ref="baberrage"
+        :boxHeight= "stageHeight"
         :isShow= "barrageIsShow"
         :barrageList = "barrageList"
         :loop = "barrageLoop"
@@ -36,8 +37,10 @@ export default {
       msg: `Hello World!vue-baberrage ${pkg.version}!`,
       position: 'normal',
       barrageIsShow: true,
+      stageHeight: 300,
+      placeStyle: 'normal',
       currentId: 0,
-      barrageLoop: true,
+      barrageLoop: false,
       hoverLanePause: true, // 鼠标移动到上面的时候 会暂停泳道滚动
       barrageList: []
     }
@@ -63,6 +66,7 @@ export default {
             id: ++this.currentId,
             avatar: './static/avatar.jpg',
             msg: this.msg,
+            // time: Math.floor(Math.random() * 10 + 5),
             time: 15,
             type: MESSAGE_TYPE.NORMAL
           }
@@ -73,6 +77,14 @@ export default {
     // 暂停弹幕
     pauseBaberrage () {
       this.$refs.baberrage.pause()
+    },
+    changeHeight (height) {
+      this.stageHeight = height
+    },
+    // 自定义泳道选择函数
+    posRender (lanes) {
+      // 全部放到第一条泳道
+      return 0
     }
   }
 }
@@ -133,7 +145,7 @@ a {
     justify-content: center;
 
   div {
-    width: 300px;
+    width: 420px;
     background: rgba(0, 0, 0, 0.6);
     padding: 15px;
     border-radius: 5px;
@@ -143,7 +155,7 @@ a {
   }
 
   input,button,select{
-    height:35px;
+    height: 35px;
     width: 15%;
     min-width: 15%;
     padding:0;
