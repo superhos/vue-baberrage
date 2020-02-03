@@ -157,6 +157,12 @@ export default {
 	- Acceptable-Values: Number
 	- Function: 弹幕之间的节流时间
 
+#### posRender
+	- Default: null
+	- Acceptable-Values: Function
+	- Function: 自定义弹幕显示的泳道
+	- Return: 需要返回泳道的索引
+
 ## 弹幕数据选项
 
 #### id
@@ -227,3 +233,8 @@ export default {
 
 #### Version 2.1.9
 - 增加节流函数
+
+#### Version 3.1.0
+- 改用Rollup打包
+- 增加`posRender`属性
+- 修复部分BUG

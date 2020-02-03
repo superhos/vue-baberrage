@@ -156,6 +156,12 @@ Just two step, and add new barrage message by pushing data into the `barrageList
 	- Acceptable-Values: Number
 	- Function: The gap time between the message
 
+#### posRender
+	- Default: null
+	- Acceptable-Values: Function
+	- Function: To customize the lane of babberrage messages.
+	- Return: The function muse return the index of the lane.
+
 ## Barrage Message Options
 
 #### id
@@ -216,11 +222,16 @@ Just two step, and add new barrage message by pushing data into the `barrageList
 - Performance improvement.
 
 #### Version 2.1.2
-- Using ES6.
+- Used ES6.
 - Performance improvement.
 
 #### Version 2.1.9
-- Adding Throttling
+- Added Throttling
+
+#### Version 3.1.0
+- Used Rollup to build.
+- Add `posRender` attribute for customizing the show up lane of baberrage messages.
+- Fixed issues.
 
 ## Future
 I am developing `Vue-Baberrage-Plus`, difference between `Vue-Barrage` and `Vue-Baberrage-Plus` is former will be used for a tool, and `Plus` is a baberrage system.
