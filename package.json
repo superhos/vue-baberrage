@@ -1,6 +1,6 @@
 {
   "name": "vue-baberrage",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Berrage plugin for VUE.js",
   "author": "Sevenschan",
   "private": false,
@@ -11,6 +11,7 @@
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit",
+    "lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue src/",
     "build": "rollup --config rollup.config.js"
   },
   "repository": {
@@ -18,7 +19,9 @@
     "url": "https://github.com/superhos/vue-baberrage"
   },
   "dependencies": {
+    "hyphenate-style-name": "^1.0.3",
     "rollup-plugin-terser": "^5.2.0",
+    "to-px": "^1.1.0",
     "uuid": "^3.4.0",
     "vue": "^2.6.11"
   },

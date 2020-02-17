@@ -8,7 +8,7 @@
 
 <h4 align="center">基于Vue.js弹幕插件</h4>
 <p align="center">
-<img alt="" src="https://img.shields.io/badge/vueBaberrage.js-3.1.0-green.svg">
+<img alt="" src="https://img.shields.io/badge/vueBaberrage.js-3.2.0-green.svg">
 <img alt="" src="https://img.shields.io/badge/vue.js-2.5.22-brightgreen.svg">
 <img alt="" src="https://img.shields.io/badge/minified size-20kB-blue.svg">
 <img alt="" src="https://img.shields.io/badge/License-MIT-orange.svg">
@@ -115,6 +115,42 @@ export default {
 
 两步即可， 当有新的数据加入到`barrageList`，就会以弹幕形式展现出来，建议`barrageList`放在Vuex中。
 
+
+## 自定义弹幕例子
+
+这是一个在3.2.0版本新增加的功能，你能够以slot的形式定制自己的弹幕样式。
+````javascript
+<vue-babarrage
+        ref="babarrage"
+        :lanesCount="5"
+        :boxHeight= "stageHeight"
+        :isShow= "barrageIsShow"
+        :barrageList = "barrageList"
+        :loop = "barrageLoop"
+        :maxWordCount = "60"
+        :hoverLanePause = "hoverLanePause"
+        >
+        <span style="color: #000" slot-scope="props">
+          {{props.item.msg}}
+        </span>
+	  </vue-babarrage>
+````
+
+通过组件的slot来自定义弹幕的样式。`props.item`的数据跟弹幕的数据一样。请注意，如果弹幕展现出来的宽度有所差异，请在弹幕数据中增加`extraWidth`来调整宽度。
+
+````javascript
+{
+	id: ++this.currentId,
+	avatar: "./static/avatar.jpg",
+	msg: this.msg,
+	time: 5,
+	type: MESSAGE_TYPE.NORMAL,
+	extraWidth: 60
+}
+````
+
+因为vue-baberrage只通过弹幕的文字来计算弹幕的长度。
+
 ## Plugin Options
 
 #### isShow
@@ -163,6 +199,11 @@ export default {
 	- Function: 自定义弹幕显示的泳道
 	- Return: 需要返回泳道的索引
 
+#### lanesCount
+	- Default: 0
+	- Acceptable-Values: Number
+	- Function: 泳道的数量。
+
 ## 弹幕数据选项
 
 #### id
@@ -202,6 +243,11 @@ export default {
 	- Acceptable-Values: Boolean
 	- Function: 目前为固定值，之后功能更新。
 
+#### extraWidth
+	- Default: 0
+	- Acceptable-Values: Number
+	- Function: 弹幕的额外宽度。
+
 ## Events
 
 当 `barrageList` 为空的时候会调用 `barrage-list-empty`。
@@ -237,4 +283,8 @@ export default {
 #### Version 3.1.0
 - 改用Rollup打包
 - 增加`posRender`属性
+- 修复部分BUG
+
+#### Version 3.2.0
+- 支持自定义弹幕样式
 - 修复部分BUG

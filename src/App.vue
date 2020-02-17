@@ -3,6 +3,7 @@
     <div class="stage">
       <vue-baberrage
         ref="baberrage"
+        :lanesCount="5"
         :boxHeight= "stageHeight"
         :isShow= "barrageIsShow"
         :barrageList = "barrageList"
@@ -10,6 +11,9 @@
         :maxWordCount = "60"
         :hoverLanePause = "hoverLanePause"
         >
+        <!-- <span style="color: #000" slot-scope="props">
+          {{props.item.msg}}
+        </span> -->
       </vue-baberrage>
     </div>
     <div class="demo-control">
@@ -38,6 +42,7 @@ export default {
       position: 'normal',
       barrageIsShow: true,
       stageHeight: 300,
+      boxWidth: 375,
       placeStyle: 'normal',
       currentId: 0,
       barrageLoop: false,
@@ -61,13 +66,17 @@ export default {
           position: 'top'
         })
       } else {
-        const arr = Array.from({length: 5}, e => {
+        const arr = Array.from({length: 15}, e => {
           return {
             id: ++this.currentId,
             avatar: './static/avatar.jpg',
             msg: this.msg,
             // time: Math.floor(Math.random() * 10 + 5),
-            time: 15,
+            style: {
+              fontSize: 15
+            },
+            time: 5,
+            extraWidth: 60,
             type: MESSAGE_TYPE.NORMAL
           }
         })
