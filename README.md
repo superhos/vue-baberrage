@@ -128,9 +128,11 @@ New function in version 3.2.0. Support provides VNode to render the barrage.
         :maxWordCount = "60"
         :hoverLanePause = "hoverLanePause"
         >
-        <span style="color: #000" slot-scope="props">
-          {{props.item.msg}}
-        </span>
+		<template v-slot:default="slotProps">
+			<span style="color: #000">
+			{{slotProps.item.data.userName}}: {{slotProps.item.msg}}
+			</span>
+		</template>
 	  </vue-babarrage>
 ````
 Customized your barrage UI as the slot of component.`props.item` data same as barrage data. Noticed that, if the width of barrage not fit in stage. You can add the field `extraWidth` in barrage data.
@@ -139,6 +141,9 @@ Customized your barrage UI as the slot of component.`props.item` data same as ba
 	id: ++this.currentId,
 	avatar: "./static/avatar.jpg",
 	msg: this.msg,
+	data: {
+	  userName: 'more data'
+	},
 	time: 5,
 	type: MESSAGE_TYPE.NORMAL,
 	extraWidth: 60

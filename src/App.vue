@@ -11,9 +11,11 @@
         :maxWordCount = "60"
         :hoverLanePause = "hoverLanePause"
         >
-        <!-- <span style="color: #000" slot-scope="props">
-          {{props.item.msg}}
-        </span> -->
+        <!-- <template v-slot:default="slotProps">
+          <span style="color: #000; padding: 15px;">
+            {{slotProps.item.msg}}
+          </span>
+        </template> -->
       </vue-baberrage>
     </div>
     <div class="demo-control">
@@ -76,7 +78,7 @@ export default {
               fontSize: 15
             },
             time: 5,
-            extraWidth: 60,
+            // extraWidth: 60,
             type: MESSAGE_TYPE.NORMAL
           }
         })
@@ -195,4 +197,11 @@ a {
 
 }
 
+.baberrageStyle {
+  display:flex;
+  flex-direction: column;
+  span {
+    color: #FFF;
+  }
+}
 </style>

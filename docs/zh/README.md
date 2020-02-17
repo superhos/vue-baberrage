@@ -121,19 +121,21 @@ export default {
 这是一个在3.2.0版本新增加的功能，你能够以slot的形式定制自己的弹幕样式。
 ````javascript
 <vue-babarrage
-        ref="babarrage"
-        :lanesCount="5"
-        :boxHeight= "stageHeight"
-        :isShow= "barrageIsShow"
-        :barrageList = "barrageList"
-        :loop = "barrageLoop"
-        :maxWordCount = "60"
-        :hoverLanePause = "hoverLanePause"
-        >
-        <span style="color: #000" slot-scope="props">
-          {{props.item.msg}}
-        </span>
-	  </vue-babarrage>
+	ref="babarrage"
+	:lanesCount="5"
+	:boxHeight= "stageHeight"
+	:isShow= "barrageIsShow"
+	:barrageList = "barrageList"
+	:loop = "barrageLoop"
+	:maxWordCount = "60"
+	:hoverLanePause = "hoverLanePause"
+	>
+	<template v-slot:default="slotProps">
+		<span style="color: #000">
+		{{slotProps.item.data.userName}}: {{slotProps.item.msg}}
+		</span>
+	</template>
+	</vue-babarrage>
 ````
 
 通过组件的slot来自定义弹幕的样式。`props.item`的数据跟弹幕的数据一样。请注意，如果弹幕展现出来的宽度有所差异，请在弹幕数据中增加`extraWidth`来调整宽度。

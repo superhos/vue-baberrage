@@ -30,6 +30,7 @@ import { setTimeout } from 'timers'
 import hyphenateStyleName from 'hyphenate-style-name'
 import VueBaberrageMsg from './components/vue-baberrage-msg/index.vue'
 import { MESSAGE_TYPE } from './constants/index.js'
+import WidthCalcultor from './utils/widthCalcultor'
 const toPX = require('to-px')
 
 window.requestAnimationFrame =
@@ -334,6 +335,7 @@ export default {
     },
     itemReset (item, timestamp) {
       item.runtimeId = uuidv4()
+      item.msg = (item.data && item.data.msg) || item.msg
       item.type = item.type || MESSAGE_TYPE.NORMAL
       item.position = item.position || 'top'
       item.barrageStyle = item.barrageStyle || 'normal'
@@ -342,10 +344,10 @@ export default {
       item.speed = this.boxWidthVal / (item.time * 1000)
       item.cssStyle = {}
       // style转为css style
-      Object.keys(item.style).forEach(key => {
+      Object.keys(item.style || {}).forEach(key => {
         item.cssStyle[hyphenateStyleName(key)] = this.isNumber(item.style[key]) ? item.style[key] + 'px' : item.style[key]
       })
-      item.width = this.strlen(item.msg) * this.toPxiel(item.cssStyle['font-size'] || '9px') + (item.extraWidth || 0)
+      item.width = this.strlen(item.msg) * this.toPxiel(item.cssStyle['font-size'] || '9px') * 0.6 + (item.extraWidth || 0) + WidthCalcultor(item.cssStyle)
       if (item.type === MESSAGE_TYPE.NORMAL) {
         let laneInd = this.selectPos()
         item.laneId = laneInd
@@ -416,9 +418,9 @@ export default {
       let len = 0
       for (let i in str) {
         if (str.charCodeAt(i) > 127 || str.charCodeAt(i) === 94) {
-          len += 1.5
+          len += 2
         } else {
-          len += 0.5
+          len++
         }
       }
       return len
