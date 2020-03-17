@@ -38,7 +38,7 @@ GIF performance is not good enough. Please refer to [DEMO](http://blog.chenhaota
 
 ## Demo
 
-See the [DEMO](http://blog.chenhaotaishuaile.com/vue-babarrage/) page
+See the [DEMO](https://blog.chenhaotaishuaile.com/vue-babarrage/) page
 
 ## Installation
 

@@ -39,7 +39,7 @@ GIF看起来效果太差了. 可以直接去 [DEMO](http://blog.chenhaotaishuail
 
 ## Demo
 
-[DEMO](http://blog.chenhaotaishuaile.com/vue-baberrage/) 页
+[DEMO](https://blog.chenhaotaishuaile.com/vue-baberrage/) 页
 
 ## Installation
 
