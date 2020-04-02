@@ -1,14 +1,14 @@
 
 <h1 align="center">
   <br>
-  <a href="#" style="border-radius:50px;padding:10px;box-sizing:border-box;background:#000;display:inline-block;" ><img src="https://raw.githubusercontent.com/superhos/vue-babarrage/master/docs/logo.png" alt="VueBabarrage" style="border-radius:150px;box-sizing:border-box;" width="200"></a>
+  <a href="#" style="border-radius:50px;padding:10px;box-sizing:border-box;background:#000;display:inline-block;" ><img src="https://raw.githubusercontent.com/superhos/vue-baberrage/master/docs/logo.png" alt="VueBaberrage" style="border-radius:150px;box-sizing:border-box;" width="200"></a>
   <br>
 	<br>
 </h1>
 
 <h4 align="center">Barrage plugin for Vue.js.</h4>
 <p align="center">
-<img alt="" src="https://img.shields.io/badge/vueBabarrage.js-3.2.0-green.svg">
+<img alt="" src="https://img.shields.io/badge/vueBaberrage.js-3.2.0-green.svg">
 <img alt="" src="https://img.shields.io/badge/vue.js-2.5.22-brightgreen.svg">
 <img alt="" src="https://img.shields.io/badge/minified size-20kB-blue.svg">
 <img alt="" src="https://img.shields.io/badge/License-MIT-orange.svg">
@@ -26,44 +26,44 @@
 
 ## Introduction
 
-Babarrage is one of the popular comment perform style in China.
+Baberrage is one of the popular comment perform style in China.
 
 ## Overview
 
-![new_version](https://raw.githubusercontent.com/superhos/vue-babarrage/master/screenshot/demo-show.gif)
+![new_version](https://raw.githubusercontent.com/superhos/vue-baberrage/master/screenshot/demo-show.gif)
 
-GIF performance is not good enough. Please refer to [DEMO](http://blog.chenhaotaishuaile.com/vue-babarrage/) page
+GIF performance is not good enough. Please refer to [DEMO](http://blog.chenhaotaishuaile.com/vue-baberrage/) page
 
 [中文文档](/docs/zh/README.md)
 
 ## Demo
 
-See the [DEMO](https://blog.chenhaotaishuaile.com/vue-babarrage/) page
+See the [DEMO](https://blog.chenhaotaishuaile.com/vue-baberrage/) page
 
 ## Installation
 
 1) Install package via NPM
 
 ```bash
-npm i vue-babarrage
+npm i vue-baberrage
 ```
 2) Install plugin within project
 
 ```javascript
 import Vue from 'vue'
-import { vueBabarrage } from 'vue-babarrage'
-Vue.use(vueBabarrage)
+import { vueBaberrage } from 'vue-baberrage'
+Vue.use(vueBaberrage)
 ```
 or
 
 ```javascript
-const vueBabarrage = request('vue-babarrage').vueBabarrage
+const vueBaberrage = request('vue-baberrage').vueBaberrage
 ```
 
 or
 
 ```html
-<script src="./dist/vue-babarrage.js"></script>
+<script src="./dist/vue-baberrage.js"></script>
 ```
 
 ## Usage
@@ -73,25 +73,25 @@ or
 
 ```html
 <div id="app">
-<vue-babarrage
+<vue-baberrage
       :isShow= "barrageIsShow"
       :barrageList = "barrageList"
       :loop = "barrageLoop"
       >
-    </vue-babarrage>
+    </vue-baberrage>
 </div>
 ```
 
 2) Script
 
 ```javascript
-import { MESSAGE_TYPE } from 'vue-babarrage'
+import { MESSAGE_TYPE } from 'vue-baberrage'
 
 export default {
   name: 'app',
   data () {
     return {
-      msg: 'Hello vue-babarrage',
+      msg: 'Hello vue-baberrage',
       barrageIsShow: true,
       currentId : 0,
       barrageLoop: false,
@@ -112,14 +112,14 @@ export default {
 
 3) Already done
 
-Just two step, and add new barrage message by pushing data into the `barrageList`. You needn't concern about the management of the barrageList, it will be handled by vue-babarrage. Suggest the `barrageList` store into the Vuex.
+Just two step, and add new barrage message by pushing data into the `barrageList`. You needn't concern about the management of the barrageList, it will be handled by vue-baberrage. Suggest the `barrageList` store into the Vuex.
 
 ## Custom Example
 
 New function in version 3.2.0. Support provides VNode to render the barrage.
 ````javascript
-<vue-babarrage
-        ref="babarrage"
+<vue-baberrage
+        ref="baberrage"
         :lanesCount="5"
         :boxHeight= "stageHeight"
         :isShow= "barrageIsShow"
@@ -133,7 +133,7 @@ New function in version 3.2.0. Support provides VNode to render the barrage.
 			{{slotProps.item.data.userName}}: {{slotProps.item.msg}}
 			</span>
 		</template>
-	  </vue-babarrage>
+	  </vue-baberrage>
 ````
 Customized your barrage UI as the slot of component.`props.item` data same as barrage data. Noticed that, if the width of barrage not fit in stage. You can add the field `extraWidth` in barrage data.
 ````javascript
@@ -249,7 +249,7 @@ Since vue-baberrage only count the width of length of the barrage's message.
 `barrage-list-empty` when the `barrageList` is empty will be called.
 
 ```html
-<vue-babarrage
+<vue-baberrage
 	      :is-show= "barrageIsShow"
 	      :barrage-list = "barrageList"
 	      :loop = "barrageLoop"
@@ -278,7 +278,7 @@ Since vue-baberrage only count the width of length of the barrage's message.
 
 #### Version 3.1.0
 - Used Rollup to build.
-- Add `posRender` attribute for customizing the show up lane of babarrage messages.
+- Add `posRender` attribute for customizing the show up lane of baberrage messages.
 - Fixed issues.
 
 #### Version 3.2.0
@@ -286,4 +286,4 @@ Since vue-baberrage only count the width of length of the barrage's message.
 - Fixed issues.
 
 ## Future
-I am developing `Vue-Babarrage-Plus`, difference between `Vue-Barrage` and `Vue-Babarrage-Plus` is former will be used for a tool, and `Plus` is a babarrage system.
+I am developing `Vue-Baberrage-Plus`, difference between `Vue-Barrage` and `Vue-Baberrage-Plus` is former will be used for a tool, and `Plus` is a baberrage system.
