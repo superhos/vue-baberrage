@@ -218,10 +218,12 @@ export default {
             priorities.unshift(this.barrageList.splice(i, 1)[0])
           }
         }
-        this.addTask(() => {
-          // requestAnimationFrame触发该任务
-          this.normalQueue = [...this.normalQueue, ...priorities]
-        }, true)
+        if (priorities.length > 0) {
+          this.addTask(() => {
+            // requestAnimationFrame触发该任务
+            this.normalQueue = [...this.normalQueue, ...priorities]
+          }, true)
+        }
 
         // 整个流程是：
         // 将barrageList切分成多个任务块，每块数据最多laneNum条，
