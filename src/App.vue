@@ -83,6 +83,20 @@ export default {
           }
         })
         this.barrageList.push(...arr)
+        this.barrageList.push(
+          {
+            id: ++this.currentId,
+            // avatar: './static/avatar.jpg',
+            msg: 'no avatar~',
+            // time: Math.floor(Math.random() * 10 + 5),
+            style: {
+              fontSize: 15
+            },
+            time: 5,
+            // extraWidth: 60,
+            type: MESSAGE_TYPE.NORMAL
+          }
+        )
       }
     },
     // 暂停弹幕

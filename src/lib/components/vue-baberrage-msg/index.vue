@@ -4,7 +4,7 @@
       <slot></slot>
     </template>
     <div v-else class="normal">
-      <div class="baberrage-avatar"><img :src="item.avatar"></div>
+      <div v-if="item.avatar" class="baberrage-avatar"><img :src="item.avatar"></div>
       <div class="baberrage-msg">{{ item.msg }}</div>
     </div>
   </div>
