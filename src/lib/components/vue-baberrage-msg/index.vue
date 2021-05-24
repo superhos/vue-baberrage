@@ -1,5 +1,5 @@
 <template>
-  <div class="baberrage-item" v-bind:class="item.barrageStyle" v-bind:style="item.style">
+  <div class="baberrage-item" v-bind:class="item.barrageClass" v-bind:style="item.style">
     <template v-if="isCustom">
       <slot></slot>
     </template>

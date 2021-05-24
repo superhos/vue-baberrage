@@ -205,6 +205,16 @@ export default {
 	- Default: 0
 	- Acceptable-Values: Number
 	- Function: 泳道的数量。
+		
+#### barrageStyle
+	- Default: { fontSize: '16px' }
+	- Acceptable-Values: Object
+	- Function: 弹幕的样式
+	
+#### maxLength
+	- Default: 0 
+	- Acceptable-Values: Number
+	- Function: 最大的弹幕队列长度，超出后剔除前面的弹幕。0 表示没有限制
 
 ## 弹幕数据选项
 
@@ -223,11 +233,11 @@ export default {
 	- Acceptable-Values: String
 	- Function: 弹幕内容
 
-#### barrageStyle
+#### barrageClass
 	- Default: `normal`
 	- Acceptable-Values: String
 	- Function: 额外的弹幕的样式
-
+	
 #### time
 	- Default: `10`
 	- Acceptable-Values: Number
@@ -250,6 +260,11 @@ export default {
 	- Acceptable-Values: Number
 	- Function: 弹幕的额外宽度。
 
+#### priority
+	- Default: false 
+	- Acceptable-Values: Boolean
+	- Function: 为true表示优先展示这条数据
+	
 ## Events
 
 当 `barrageList` 为空的时候会调用 `barrage-list-empty`。

@@ -97,6 +97,20 @@ export default {
     // 放置函数
     posRender: {
       type: Function
+    },
+    // 弹幕样式
+    barrageStyle: {
+      type: Object,
+      default: function () {
+        return {
+          fontSize: '16px'
+        }
+      }
+    },
+    // 弹幕队列的最大数量，一旦超过，则将最先进入的弹幕剔除掉
+    maxLength: {
+      type: Number,
+      default: 0 // 0表示没有限制
     }
   },
   data () {
@@ -104,8 +118,8 @@ export default {
       boxWidthVal: this.boxWidth,
       boxHeightVal: this.boxHeight,
       loopVal: this.loop,
-      laneNum: 0, // 将舞台分为固定泳道，防止弹幕重叠
-      lanes: [],
+      laneNum: 0, // 泳道总数量，将舞台分为固定泳道，防止弹幕重叠
+      lanes: [], // 泳道数据的数组，每一个元素为一个泳道的数据
       startTime: 0,
       frameId: null,
       readyId: 0,
@@ -196,9 +210,29 @@ export default {
     insertToReadyShowQueue () {
       clearTimeout(this.readyId)
       this.readyId = setTimeout(() => {
+        // 优先队列比较特殊，需要提取出要优先展示的数据，优先插入队列
+        let priorities = []
+        for (let i = this.barrageList.length; i--;) {
+          if (this.barrageList[i].priority) {
+            // 从barrageList删除并插入priorities
+            priorities.unshift(this.barrageList.splice(i, 1)[0])
+          }
+        }
+        if (priorities.length > 0) {
+          this.addTask(() => {
+            // requestAnimationFrame触发该任务
+            this.normalQueue = [...this.normalQueue, ...priorities]
+          }, true)
+        }
+
+        // 整个流程是：
+        // 将barrageList切分成多个任务块，每块数据最多laneNum条，
+        // 按顺序每隔throttleGap间隔塞入一个任务块到normalQueue中
         while (this.barrageList.length > 0) {
+          // 每次任务最多插入和泳道数量相同的数据
           let current = this.barrageList.splice(0, this.laneNum)
           this.addTask(() => {
+            // requestAnimationFrame触发该任务
             this.normalQueue = [...this.normalQueue, ...current]
           })
         }
@@ -242,6 +276,9 @@ export default {
     move (timestamp) {
       this.normalQueue.forEach((item, i) => {
         if (item.startTime) {
+          // 有startTime表示已经添加到了浏览器的弹幕中
+          // 进行正常的弹幕移动即可
+
           if (item.type === MESSAGE_TYPE.NORMAL) {
             // 正常弹幕
             this.normalMove(item, timestamp)
@@ -253,15 +290,28 @@ export default {
                 e => e.runtimeId === item.runtimeId
               )
               this.lanes[item.laneId].laneQueue.splice(indx, 1)
+
               if (this.loopVal) {
-                // 如果循环则重新加入数据
-                this.itemReset(item, timestamp)
+                let leng = this.normalQueue.length
+                let diff = leng - this.maxLength
+                if (this.maxLength && diff && i < diff) {
+                  // 需要处理当队列中的条数大于允许的最大条数
+                  // 根据顺序要将队列前面的数据清理掉
+                  // 也就是i < diff的弹幕要清理
+                  this.normalQueue.splice(i, 1)
+                } else {
+                  // 如果循环则重新加入数据
+                  this.itemReset(item, timestamp)
+                }
               } else {
                 this.normalQueue.splice(i, 1)
               }
             }
           }
         } else {
+          // 否则表示还没有添加到浏览器的弹幕中，
+          // 添加之
+
           if (item.type === MESSAGE_TYPE.FROM_TOP) {
             if (item.position !== 'top' && item.position !== 'bottom') {
               throw new Error(
@@ -317,12 +367,13 @@ export default {
     },
     // 选择空闲可以插入的泳道
     selectPos () {
-      // 如果有用户设置的函数函数则使用用户的
+      // 如果有用户设置的函数则使用用户的
       if (this.posRender) {
         // 传入参数为当前所有泳道
         return this.posRender(this.lanes)
       } else {
         // 根据模式选择
+        // 按次序轮询插入对应的泳道
         if (this.showInd + 1 > this.laneNum) {
           this.showInd = 0
         }
@@ -333,34 +384,70 @@ export default {
       // 如果弹幕left大于舞台宽度 则判断为正在等待状态
       return msg.left > this.boxWidthVal
     },
+    // 初始化弹幕数据并插入泳道
     itemReset (item, timestamp) {
       item.runtimeId = uuidv4()
       item.msg = (item.data && item.data.msg) || item.msg
       item.type = item.type || MESSAGE_TYPE.NORMAL
       item.position = item.position || 'top'
-      item.barrageStyle = item.barrageStyle || 'normal'
+      item.barrageClass = item.barrageClass || 'normal'
       item.startTime = timestamp
       item.currentTime = timestamp
       item.speed = this.boxWidthVal / (item.time * 1000)
       item.cssStyle = {}
+      let style = {
+        ...this.barrageStyle,
+        ...(item.style || {})
+      }
       // style转为css style
-      Object.keys(item.style || {}).forEach(key => {
-        item.cssStyle[hyphenateStyleName(key)] = this.isNumber(item.style[key]) ? item.style[key] + 'px' : item.style[key]
+      Object.keys(style).forEach(key => {
+        item.cssStyle[hyphenateStyleName(key)] = style[key]
       })
+      // 正常一个英文字符占半个字宽（但是像w这类宽字符就比较宽了），中文字符占一个自宽。为了正常书写字体，所以使用了0.6就可以了
+      // 如果发送异常的弹幕如“wwwwwwwwwwwwwwwwwwwwwwww”就会导致计算的弹幕宽度小于实际的宽度，从而导致重叠
       item.width = this.strlen(item.msg) * this.toPxiel(item.cssStyle['font-size'] || '9px') * 0.6 + (item.extraWidth || 0) + WidthCalcultor(item.cssStyle)
+
       if (item.type === MESSAGE_TYPE.NORMAL) {
         let laneInd = this.selectPos()
         item.laneId = laneInd
         let lastLeft = this.boxWidthVal
-        if (this.lanes[laneInd].laneQueue.length > 0) {
-          const last = this.lanes[laneInd].laneQueue[this.lanes[laneInd].laneQueue.length - 1]
-          if (last.left > this.boxWidthVal || last.left > (this.boxWidthVal - last.width)) {
-            lastLeft = last.width + last.left
+        // 当前泳道的数据队列
+        let queue = this.lanes[laneInd].laneQueue
+        if (queue.length > 0) {
+          const last = queue[queue.length - 1]
+          if (last.left + last.width > this.boxWidthVal) {
+            // 最后一条数据的超出了弹幕展示框的右侧
+            // 如果是标记为优先展示的弹幕，需要插入到最近的点进行插入
+            if (item.priority) {
+              let index = queue.length - 1
+              let indexItem = null
+              // 所有后面的弹幕都需要后移一个item.width + this.messageGap
+              while (index >= 0) {
+                indexItem = queue[index]
+                if (indexItem.left >= this.boxWidthVal) {
+                  indexItem.left += item.width + this.messageGap
+                  index--
+                } else {
+                  break
+                }
+              }
+              // lastLeft取弹幕容器宽度和上一个弹幕的右侧位置的较大值
+              lastLeft = Math.max(lastLeft, indexItem.left + indexItem.width + this.messageGap)
+              // 在index位置插入这个优先展示弹幕
+              // 并将弹幕的priority属性去掉,避免二次读取
+              delete item.priority
+              queue.splice(index + 1, 0, item)
+            } else {
+              // 添加一个间隙messageGap
+              lastLeft = last.left + last.width + this.messageGap
+              queue.push(item)
+            }
           } else {
-            lastLeft += last.width
+            queue.push(item)
           }
+        } else {
+          queue.push(item)
         }
-        this.lanes[laneInd].laneQueue.push(item)
         // 计算位置
         item.top =
           this.indexShowQueue[laneInd] * (this.messageHeight + this.messageGap)
@@ -392,14 +479,23 @@ export default {
         transform: 'translate3d(' + item.left + 'px,' + item.top + 'px,0)'
       })
     },
-    addTask (fun) {
-      this.taskQueue.push(fun)
+    // 往任务队列中塞入任务（每次任务展示的弹幕和泳道数据相同）
+    addTask (fun, priority = false) {
+      if (priority) {
+        // 优先展示要插入到任务队列前面
+        this.taskQueue.unshift(fun)
+      } else {
+        this.taskQueue.push(fun)
+      }
+      // 如果任务队列有数据且当前没有进行任务则执行之
       if (this.taskQueue.length > 0 && !this.taskIsRunning) {
         this.taskIsRunning = true
         window.requestAnimationFrame(this.runTask)
       }
     },
+    // 执行弹幕任务
     runTask (time) {
+      // 当runTask被触发的时间点距离上次触发的时间点要大于等于throttleGap才执行任务（插入弹幕）
       if (!this.taskLastTime || time - this.taskLastTime >= this.throttleGap) {
         let func = this.taskQueue.shift()
         this.taskLastTime = time
@@ -407,6 +503,7 @@ export default {
       }
 
       if (this.taskQueue.length > 0) {
+        // 如果任务队列中有数据，则下一帧触发runTask
         window.requestAnimationFrame(this.runTask)
       } else {
         this.taskIsRunning = false

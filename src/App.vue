@@ -62,7 +62,7 @@ export default {
           id: ++this.currentId,
           avatar: './static/avatar.jpg',
           msg: this.msg + this.currentId,
-          barrageStyle: 'top',
+          barrageClass: 'top',
           time: 8,
           type: MESSAGE_TYPE.FROM_TOP,
           position: 'top'

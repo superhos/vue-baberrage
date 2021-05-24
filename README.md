@@ -204,7 +204,17 @@ Since vue-baberrage only count the width of length of the barrage's message.
 	- Default: 0
 	- Acceptable-Values: Number
 	- Function: To fixed the number of the lanes.
-
+	
+#### barrageStyle
+	- Default: { fontSize: '16px' }
+	- Acceptable-Values: Object
+	- Function: barrage css style
+	
+#### maxLength
+	- Default: 0
+	- Acceptable-Values: Number
+	- Function: The maximum length of the barrage queue, after which the front barrage is removed. 0 means no limit
+    
 ## Barrage Message Options
 
 #### id
@@ -221,8 +231,8 @@ Since vue-baberrage only count the width of length of the barrage's message.
 	- Default: `null`
 	- Acceptable-Values: String
 	- Function: The content of the barrage message.
-
-#### barrageStyle
+	
+#### barrageClass
 	- Default: `normal`
 	- Acceptable-Values: String
 	- Function: the css class name of the barrage message.
@@ -244,6 +254,11 @@ Since vue-baberrage only count the width of length of the barrage's message.
 	- Acceptable-Values: Number
 	- Function: Add extra width to the barrage message.
 
+#### priority
+    - Default: false 
+    - Acceptable-Values: Boolean
+    - Function: True means display the data first
+    
 ## Events
 
 `barrage-list-empty` when the `barrageList` is empty will be called.
